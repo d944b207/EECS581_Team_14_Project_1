@@ -43,12 +43,17 @@
                 //create a button element and store it in a tempButton variable
                 var tempButton = document.createElement("button");
 
+                //give the tempButton an id
+                tempButton.id = `button${i}`;
+
                 //make the height of the button be 50px (1/10 * height of the canvas)
                 tempButton.style.height = "50px";
                 
                 //append the tempButton to the element that div is "pointing" to
                 div.append(tempButton);
             }
+
+
 
         </script>
     </body>
