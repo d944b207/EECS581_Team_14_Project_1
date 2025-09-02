@@ -1,60 +1,88 @@
 <!doctype html>
 <html>
-    <head>
-        <style>
-            /*Element with id="container" will follow the regular positioning flow of the html document*/
-            #container {
-                position: relative;
-            }
-            /*Within an element with id="container", elements with id="canvas" will have an absolute position
+
+<head>
+    <style>
+        /*Element with id="container" will follow the regular positioning flow of the html document*/
+        #container {
+            position: relative;
+        }
+
+        /*Within an element with id="container", elements with id="canvas" will have an absolute position
               Elements with id="overlay" (in general) will have an absolute position
               Absolute position is unaffected by rest of the html doc
               This allows for the generation of our grid of buttons on top of a canvas element*/
-            #container canvas, #overlay {
-                position: absolute;
-            }
-            canvas {
-                border: 1px solid black;
-            }
-            .categories-buttons {
-                /*grid of 10 columns, each being 70 pixels wide*/
-                display: grid;
-                grid-template-columns: 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>MINESWEEPER</h1>
-        <!--Create the canvas and overlay-->
-        <div id="container">
-            <canvas id="canvas" width="700" height="500"></canvas>
-            <div id="overlay" class="categories-buttons"></div>
-        </div>
+        #container canvas,
+        #overlay {
+            position: absolute;
+        }
+
+        canvas {
+            border: 1px solid black;
+        }
+
+        .categories-buttons {
+            /*grid of 10 columns, each being 70 pixels wide*/
+            display: grid;
+            grid-template-columns: 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>MINESWEEPER</h1>
+    <!--Create the canvas and overlay-->
+    <div id="container">
         <canvas id="canvas" width="700" height="500"></canvas>
-        <script>
+        <div id="overlay" class="categories-buttons"></div>
+    </div>
+    <canvas id="canvas" width="700" height="500"></canvas>
+    <script>
 
-            //get access to the divider and the canvas elements
-            var div = document.getElementsByClassName("categories-buttons")[0];
-            const context = document.getElementById("canvas").getContext("2d");
+        //get access to the divider and the canvas elements
+        var div = document.getElementsByClassName("categories-buttons")[0];
+        const context = document.getElementById("canvas").getContext("2d");
 
-            //for a 10x10 grid, we will have 100 buttons
-            for (var i = 0; i < 100; i++) {
+        //for a 10x10 grid, we will have 100 buttons
+        for (var i = 0; i < 100; i++) {
 
-                //create a button element and store it in a tempButton variable
-                var tempButton = document.createElement("button");
+            //create a button element and store it in a tempButton variable
+            var tempButton = document.createElement("button");
 
-                //give the tempButton an id
-                tempButton.id = `button${i}`;
+            //give the tempButton an id
+            tempButton.id = `button${i}`;
 
-                //make the height of the button be 50px (1/10 * height of the canvas)
-                tempButton.style.height = "50px";
-                
-                //append the tempButton to the element that div is "pointing" to
-                div.append(tempButton);
+            //make the height of the button be 50px (1/10 * height of the canvas)
+            tempButton.style.height = "50px";
+
+            //append the tempButton to the element that div is "pointing" to
+            div.append(tempButton);
+        }
+
+        function generate_array(mines_amount, start_index) {
+            const minefield = new Array(100);
+            minefield.fill("_", 0, 100 - mines_amount);
+            minefield.fill("*", 100 - mines_amount, 100);
+            console.log("start: " + minefield);
+            if (minefield[start_index] == "*") {
+                while (minefield[start_index] == "*") {
+                    shuffle(minefield);
+                    console.log("iteration: " + minefield);
+                }
             }
+            minefield[start_index] = 0;
+            console.log("end: " + minefield);
+        }
 
+        // https://javascript.info/task/shuffle
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
 
+    </script>
+</body>
 
-        </script>
-    </body>
 </html>
