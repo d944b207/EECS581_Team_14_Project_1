@@ -50,19 +50,50 @@
             var tempButton = document.createElement("button");
 
             //give the tempButton an id
-            tempButton.id = `button${i}`;
+            tempButton.id = i;
+
+            // give the button a flag to tell if it is flagged or not
+            tempButton.is_flagged = 0;
 
             //make the height of the button be 50px (1/10 * height of the canvas)
             tempButton.style.height = "50px";
+
+            // add left-click event handler to the button
+            tempButton.addEventListener("click", left_click);
 
             //append the tempButton to the element that div is "pointing" to
             div.append(tempButton);
         }
 
+        const minefield = new Array(100); // moving to global scope so other functions can reference this
+        generate_array(20, );
+
+        function left_click() {
+            // "this" refers to the HTML element that called this function
+            console.log(this.id);
+            console.log(typeof(this.id));
+            const id = parseInt(this.id);
+            left_click.initial_click = true;
+
+            // we can disable buttons once their number is revealed, so this is all we need to check
+            if (!this.is_flagged) {
+                reveal(this)
+            }
+        }
+
+        function reveal() {
+            // TO BE IMPLEMENTED:
+            // end the game if this is called on a bomb initially, otherwise it is a
+            // recursive or BFS (ideally) reveal function that reveals all numbers adjacent (including diagonally)
+            // to the revealed tile if it is empty (no adjacent bombs).
+            // Then, reveal all other empty adjacent tiles with BFS.
+        }
+
         function generate_array(mines_amount, start_index) {
-            const minefield = new Array(100);
+            // const minefield = new Array(100); moved to global scope
             minefield.fill("_", 0, 100 - mines_amount);
             minefield.fill("*", 100 - mines_amount, 100);
+            shuffle(minefield);
             console.log("start: " + minefield);
             if (minefield[start_index] == "*") {
                 while (minefield[start_index] == "*") {
@@ -70,7 +101,7 @@
                     console.log("iteration: " + minefield);
                 }
             }
-            minefield[start_index] = 0;
+            // minefield[start_index] = 0; 
             console.log("end: " + minefield);
         }
 
