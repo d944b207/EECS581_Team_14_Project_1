@@ -43,6 +43,9 @@
         var div = document.getElementsByClassName("categories-buttons")[0];
         const context = document.getElementById("canvas").getContext("2d");
 
+        const NUM_MINES = 20; // change this to the result of the input form
+        const minefield = new Array(100); // moving to global scope so other functions can reference this easily
+
         //for a 10x10 grid, we will have 100 buttons
         for (var i = 0; i < 100; i++) {
 
@@ -64,10 +67,7 @@
             //append the tempButton to the element that div is "pointing" to
             div.append(tempButton);
         }
-
-        const NUM_MINES = 20; // change this to the result of the input form
-        const minefield = new Array(100); // moving to global scope so other functions can reference this easily
-        
+              
         function left_click() {
             // "this" refers to the HTML element that called this function
             console.log(this.id);
@@ -81,12 +81,20 @@
 
             // we can disable buttons once their number is revealed, so this is all we need to check
             if (!this.is_flagged) {
+                if (minefield[this.id] == "*") {
+                    gameOver();
+                }
                 reveal(this);
             }
         }
 
+        function gameOver() {
+            // TODO: Add game over screen and reveal all bombs
+            console.log("You lose :(");
+        }
+
         function reveal(tile) {
-            // TO BE IMPLEMENTED:
+            // TODO:
             // end the game if this is called on a bomb initially, otherwise it is a
             // recursive or BFS (ideally) reveal function that reveals all numbers adjacent (including diagonally)
             // to the revealed tile if it is empty (no adjacent bombs).
