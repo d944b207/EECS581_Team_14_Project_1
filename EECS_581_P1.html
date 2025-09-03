@@ -49,7 +49,7 @@
             //create a button element and store it in a tempButton variable
             var tempButton = document.createElement("button");
 
-            //give the tempButton an id
+            //give the tempButton an id (will be converted to a string)
             tempButton.id = i;
 
             // give the button a flag to tell if it is flagged or not
@@ -65,32 +65,48 @@
             div.append(tempButton);
         }
 
-        const minefield = new Array(100); // moving to global scope so other functions can reference this
-        generate_array(20, );
-
+        const NUM_MINES = 20; // change this to the result of the input form
+        const minefield = new Array(100); // moving to global scope so other functions can reference this easily
+        
         function left_click() {
             // "this" refers to the HTML element that called this function
             console.log(this.id);
-            console.log(typeof(this.id));
             const id = parseInt(this.id);
-            left_click.initial_click = true;
+
+            // generate the mine positions only after the first click
+            if (typeof left_click.initialized == 'undefined') {
+                left_click.initialized = true;
+                generate_array(NUM_MINES, id);
+            }
 
             // we can disable buttons once their number is revealed, so this is all we need to check
             if (!this.is_flagged) {
-                reveal(this)
+                reveal(this);
             }
         }
 
-        function reveal() {
+        function reveal(tile) {
             // TO BE IMPLEMENTED:
             // end the game if this is called on a bomb initially, otherwise it is a
             // recursive or BFS (ideally) reveal function that reveals all numbers adjacent (including diagonally)
             // to the revealed tile if it is empty (no adjacent bombs).
             // Then, reveal all other empty adjacent tiles with BFS.
+            console.log(`revealing ${tile.id}`);
+
+            // we don't need to click the button anymore, we can disable it
+            tile.disabled = true;
+
+            // set the text on the button to the number of adjacent mines here
+            tile.innerHTML = ":)";
+            
+            // change the style of the button. Should probably be moved up to css eventually
+            tile.style.fontWeight = "bold";
+            tile.style.fontSize = "20px";
+            tile.style.color = "#008CBA"; // here we can assign a color based on the revealed number by checking minefield[id]. #111 was black
         }
 
         function generate_array(mines_amount, start_index) {
-            // const minefield = new Array(100); moved to global scope
+            // const minefield = new Array(100); moved to global scope, at least for now
             minefield.fill("_", 0, 100 - mines_amount);
             minefield.fill("*", 100 - mines_amount, 100);
             shuffle(minefield);
@@ -101,7 +117,7 @@
                     console.log("iteration: " + minefield);
                 }
             }
-            // minefield[start_index] = 0; 
+            minefield[start_index] = 0; 
             console.log("end: " + minefield);
         }
 
