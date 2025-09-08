@@ -114,8 +114,14 @@
                 }
                 console.log(line)
             }
-            return minefield;
+
+            // Assign minefield values to HTML grid
+            for (let i = 0; i < 100; i++) {
+                field = document.getElementById("button"+i);
+                field.value = minefield[i];
+            }
         }
+
 
         // https://javascript.info/task/shuffle
         function shuffle(array) {
