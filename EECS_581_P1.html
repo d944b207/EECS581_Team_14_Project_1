@@ -31,24 +31,31 @@
 
 <body>
     <h1>MINESWEEPER</h1>
-    <!--Create the canvas and overlay-->
+    <!--Pre-Game start-up menu/info-->
     <button id="start_game_button">Start Game</button>
     <p id="start_info">This will update to display info about the game settings upon clicking the start game button</p>
+
+    <!--Create the canvas and overlay-->
     <div id="container">
         <canvas id="canvas" width="700" height="500"></canvas>
         <div id="overlay" class="categories-buttons"></div>
     </div>
-    <canvas id="canvas" width="700" height="500"></canvas>
     <script>
+
+        let NUM_MINES; // change this to the result of the input form
+        const minefield = new Array(100); // moving to global scope so other functions can reference this easily
+        let mouse_x = 0;
+        let mouse_y = 0;
+
+        //get access to the start game button
+        var start_game_button = document.getElementById("start_game_button");
+
+        //when the start button is clicked, chosen settings will be applied
+        start_game_button.addEventListener("click", apply_settings);
 
         //get access to the divider and the canvas elements
         var div = document.getElementsByClassName("categories-buttons")[0];
         const context = document.getElementById("canvas").getContext("2d");
-
-        const NUM_MINES = 20; // change this to the result of the input form
-        const minefield = new Array(100); // moving to global scope so other functions can reference this easily
-        let mouse_x = 0;
-        let mouse_y = 0;
 
         //for a 10x10 grid, we will have 100 buttons
         for (var i = 0; i < 100; i++) {
@@ -104,6 +111,20 @@
             }
           }
         });
+
+        function apply_settings() {
+
+            NUM_MINES = 20; //TODO: change to the value from input form
+
+            //TODO: add extra settings if implemented in future
+
+            //get the settings paragraph
+            var start_info = document.getElementById("start_info");
+
+            //change the text to show settings to validate that they've been applied
+            start_info.innerText = `Game started with ${NUM_MINES} mines`
+
+        }
               
         function left_click() {
             // "this" refers to the HTML element that called this function
