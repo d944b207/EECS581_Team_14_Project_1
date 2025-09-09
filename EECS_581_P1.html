@@ -166,7 +166,7 @@
             if (minefield[tile.id] == "*") {
               tile.innerHTML = "*";
             } else {
-              tile.innerHTML = ":)"; // TODO reveal # of mines nearby
+              tile.innerHTML = minefield[tile.id]; // TODO reveal # of mines nearby
             }
             
             // change the style of the button. Should probably be moved up to css eventually
@@ -231,12 +231,7 @@
                 }
                 console.log(line)
             }
-
-            // Assign minefield values to HTML grid
-            for (let i = 0; i < 100; i++) {
-                field = document.getElementById("button"+i);
-                field.value = minefield[i];
-            }
+            
         }
 
 
