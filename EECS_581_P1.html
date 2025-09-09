@@ -25,36 +25,34 @@
     </head>
     <body>
         <h1>MINESWEEPER</h1>
-        <!--Create the canvas and overlay-->
+        <!--Top of page (pretty much everything that doesnt include the board) wrapped in a div-->
+        <div style="margin-bottom:10px;">
+            <!--User Selects Number of Mines-->
+            <label for="mineCount">Mines:</label>
+            <select id="mineCount">
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15" selected>15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+            </select>
+            <!--Display Remaining Mines (Mines - Flags)-->
+            <span id="remainingMines" style="margin-left:30px;font-weight:bold;">Remaining Mines: 15</span>
+            <!--Display Game Status-->
+            <span id="gameStatus" style="margin-left:30px;font-weight:bold;">Playing</span>
+        </div>
+        <!--This is the grid wrapped in a div. Styles (ids and classes) found in head of html file-->
         <div id="container">
-            <canvas id="canvas" width="700" height="500"></canvas>
+            <div id="gridLabels"></div>
             <div id="overlay" class="categories-buttons"></div>
         </div>
-        <canvas id="canvas" width="700" height="500"></canvas>
         <script>
-
-            //get access to the divider and the canvas elements
-            var div = document.getElementsByClassName("categories-buttons")[0];
-            const context = document.getElementById("canvas").getContext("2d");
-
-            //for a 10x10 grid, we will have 100 buttons
-            for (var i = 0; i < 100; i++) {
-
-                //create a button element and store it in a tempButton variable
-                var tempButton = document.createElement("button");
-
-                //give the tempButton an id
-                tempButton.id = `button${i}`;
-
-                //make the height of the button be 50px (1/10 * height of the canvas)
-                tempButton.style.height = "50px";
-                
-                //append the tempButton to the element that div is "pointing" to
-                div.append(tempButton);
-            }
-
-
-
         </script>
     </body>
 </html>
