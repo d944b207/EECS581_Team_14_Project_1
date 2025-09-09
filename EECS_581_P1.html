@@ -31,13 +31,27 @@
 
 <body>
     <h1>MINESWEEPER</h1>
+    <!--Pre-Game start-up menu/info-->
+    <button id="start_game_button">Start Game</button>
+    <p id="start_info">This will update to display info about the game settings upon clicking the start game button</p>
+
     <!--Create the canvas and overlay-->
     <div id="container">
         <canvas id="canvas" width="700" height="500"></canvas>
         <div id="overlay" class="categories-buttons"></div>
     </div>
-    <canvas id="canvas" width="700" height="500"></canvas>
     <script>
+
+        let NUM_MINES; // change this to the result of the input form
+        const minefield = new Array(100); // moving to global scope so other functions can reference this easily
+        let mouse_x = 0;
+        let mouse_y = 0;
+
+        //get access to the start game button
+        var start_game_button = document.getElementById("start_game_button");
+
+        //when the start button is clicked, chosen settings will be applied
+        start_game_button.addEventListener("click", apply_settings);
 
         //get access to the divider and the canvas elements
         var div = document.getElementsByClassName("categories-buttons")[0];
@@ -49,21 +63,124 @@
             //create a button element and store it in a tempButton variable
             var tempButton = document.createElement("button");
 
-            //give the tempButton an id
-            tempButton.id = `button${i}`;
+            //give the tempButton an id (will be converted to a string)
+            tempButton.id = i;
+            console.log(tempButton.id);
+
+            // give the button a flag to tell if it is flagged or not
+            tempButton.is_flagged = 0;
 
             //make the height of the button be 50px (1/10 * height of the canvas)
             tempButton.style.height = "50px";
 
+            // add left-click event handler to the button
+            tempButton.addEventListener("click", left_click);
+
+            // f-key event listener needs to know whether or not mouse is hovering over
+            // button.
+            tempButton.is_hovering = false;
+            tempButton.addEventListener("mouseenter", function() {
+              this.is_hovering = true;
+            });
+            tempButton.addEventListener("mouseleave", function() {
+              this.is_hovering = false;
+            });
+
             //append the tempButton to the element that div is "pointing" to
             div.append(tempButton);
+        }
+        // track mouse's coordinates for flagging spaces
+        document.addEventListener("mousemove", function() {
+          mouse_x = event.clientX;
+          mouse_y = event.clientY;
+        });
+        // event listener for f-key/flagging
+        document.addEventListener("keypress", function(event) {
+          let button = document.elementFromPoint(mouse_x, mouse_y);
+          if (button.is_hovering && event.key === "f") {
+            if (!button.is_flagged && !button.disabled) {
+              button.innerHTML = "FLAG";
+              button.style.fontWeight = "bold";
+              button.style.fontSize = "20px";
+              button.style.color = "#008CBA";
+
+              button.is_flagged = !button.is_flagged;
+            } else if (button.is_flagged && !button.disabled) {
+              button.innerHTML = "";
+              button.is_flagged = !button.is_flagged;
+            }
+          }
+        });
+
+        function apply_settings() {
+
+            NUM_MINES = 20; //TODO: change to the value from input form
+
+            //TODO: add extra settings if implemented in future
+
+            //get the settings paragraph
+            var start_info = document.getElementById("start_info");
+
+            //change the text to show settings to validate that they've been applied
+            start_info.innerText = `Game started with ${NUM_MINES} mines`;
+
+        }
+              
+        function left_click() {
+            // "this" refers to the HTML element that called this function
+            console.log(this.id);
+            const id = parseInt(this.id);
+
+            // generate the mine positions only after the first click
+            if (typeof left_click.initialized == 'undefined') {
+                left_click.initialized = true;
+                generate_array(NUM_MINES, id);
+            }
+
+            // we can disable buttons once their number is revealed, so this is all we need to check
+            if (!this.is_flagged) {
+                if (minefield[this.id] == "*") {
+                    gameOver();
+                }
+                reveal(this);
+            }
+        }
+
+        function gameOver() {
+            // TODO: Add game over screen and reveal all bombs
+            console.log("You lose :(");
+        }
+
+        function reveal(tile) {
+            // TODO:
+            // end the game if this is called on a bomb initially, otherwise it is a
+            // recursive or BFS (ideally) reveal function that reveals all numbers adjacent (including diagonally)
+            // to the revealed tile if it is empty (no adjacent bombs).
+            // Then, reveal all other empty adjacent tiles with BFS.
+            console.log(`revealing ${tile.id}`);
+
+            // we don't need to click the button anymore, we can disable it
+            tile.disabled = true;
+
+            // set the text on the button to the number of adjacent mines here
+            if (minefield[tile.id] == "*") {
+              tile.innerHTML = "*";
+            } else {
+              tile.innerHTML = ":)"; // TODO reveal # of mines nearby
+            }
+            
+            // change the style of the button. Should probably be moved up to css eventually
+            tile.style.fontWeight = "bold";
+            tile.style.fontSize = "20px";
+            tile.style.color = "#008CBA"; // here we can assign a color based on the revealed number by checking minefield[id]. #111 was black
         }
 
         function generate_array(mines_amount, start_index) {
             // Generates minefield without mine in start_index
-            const minefield = new Array(100);
+            // const minefield = new Array(100); moved to global scope, at least for now
             minefield.fill("_", 0, 100 - mines_amount);
             minefield.fill("*", 100 - mines_amount, 100);
+            shuffle(minefield);
             console.log("start: " + minefield);
             shuffle(minefield);
             if (minefield[start_index] == "*") {
@@ -72,7 +189,7 @@
                     console.log("iteration: " + minefield);
                 }
             }
-            minefield[start_index] = 0;
+            minefield[start_index] = 0; 
             console.log("end: " + minefield);
 
             // Generates "mines_nearby" values
