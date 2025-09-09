@@ -176,11 +176,13 @@
         }
 
         function generate_array(mines_amount, start_index) {
+            // Generates minefield without mine in start_index
             // const minefield = new Array(100); moved to global scope, at least for now
             minefield.fill("_", 0, 100 - mines_amount);
             minefield.fill("*", 100 - mines_amount, 100);
             shuffle(minefield);
             console.log("start: " + minefield);
+            shuffle(minefield);
             if (minefield[start_index] == "*") {
                 while (minefield[start_index] == "*") {
                     shuffle(minefield);
@@ -189,7 +191,54 @@
             }
             minefield[start_index] = 0; 
             console.log("end: " + minefield);
+
+            // Generates "mines_nearby" values
+            for (let i = 0; i < 100; i++) {
+                let mines_nearby = 0;
+                if (minefield[i] != "*") {
+                    if(minefield[i-11] == "*") {    // Top Left
+                        mines_nearby++;
+                    }
+                    if(minefield[i-10] == "*") {    // Top
+                        mines_nearby++;
+                    }
+                    if(minefield[i-9] == "*") {     // Top Right
+                        mines_nearby++;
+                    }
+                    if(minefield[i-1] == "*") {     // Left
+                        mines_nearby++;
+                    }
+                    if(minefield[i+1] == "*") {     // Right
+                        mines_nearby++;
+                    }
+                    if(minefield[i+9] == "*") {     // Bottom Left
+                        mines_nearby++;
+                    }
+                    if(minefield[i+10] == "*") {    // Bottom
+                        mines_nearby++;
+                    }
+                    if(minefield[i+11] == "*") {    // Bottom Left
+                        mines_nearby++;
+                    }
+                    minefield[i] = mines_nearby;
+                }
+            }
+            console.log("Minefield:")
+            for (let i = 0; i < 100; i+=10) {
+                line = ""
+                for (let j = 0; j < 10; j++) {
+                    line += minefield[i+j] + " "
+                }
+                console.log(line)
+            }
+
+            // Assign minefield values to HTML grid
+            for (let i = 0; i < 100; i++) {
+                field = document.getElementById("button"+i);
+                field.value = minefield[i];
+            }
         }
+
 
         // https://javascript.info/task/shuffle
         function shuffle(array) {
