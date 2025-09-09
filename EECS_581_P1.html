@@ -211,22 +211,22 @@
             for (let i = 0; i < 100; i++) {
                 let mines_nearby = 0;
                 if (minefield[i] != "*") {
-                    if(minefield[i-11] == "*") {    // Top Left
+                    if(minefield[i-11] == "*" && (i % 10 != 0)) {    // Top Left
                         mines_nearby++;
                     }
                     if(minefield[i-10] == "*") {    // Top
                         mines_nearby++;
                     }
-                    if(minefield[i-9] == "*") {     // Top Right
+                    if(minefield[i-9] == "*" && ((i + 1) % 10 != 0)) {     // Top Right
                         mines_nearby++;
                     }
-                    if(minefield[i-1] == "*") {     // Left
+                    if(minefield[i-1] == "*"  && (i % 10 != 0)) {     // Left
                         mines_nearby++;
                     }
-                    if(minefield[i+1] == "*") {     // Right
+                    if(minefield[i+1] == "*" && ((i + 1) % 10 != 0)) {     // Right
                         mines_nearby++;
                     }
-                    if(minefield[i+9] == "*") {     // Bottom Left
+                    if(minefield[i+9] == "*"  && (i % 10 != 0)) {     // Bottom Left
                         mines_nearby++;
                     }
                     if(minefield[i+10] == "*") {    // Bottom
