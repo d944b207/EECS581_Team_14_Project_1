@@ -176,6 +176,7 @@
             // set the text on the button to the number of adjacent mines here
             if (minefield[tile.id] == "*") {
                 tile.innerHTML = "*";
+                tile.style.color = "black";
             } else {
                 tile.innerHTML = minefield[tile.id]; // TODO reveal # of mines nearby
             }
@@ -183,7 +184,32 @@
             // change the style of the button. Should probably be moved up to css eventually
             tile.style.fontWeight = "bold";
             tile.style.fontSize = "20px";
-            tile.style.color = "#008CBA"; // here we can assign a color based on the revealed number by checking minefield[id]. #111 was black
+
+            // here we can assign a color based on the revealed number by checking minefield[id]. #111 was black
+            if (minefield[tile.id] == 1) {
+                tile.style.color = "blue";
+            }
+            else if (minefield[tile.id] == 2) {
+                tile.style.color = "green";
+            }
+            else if (minefield[tile.id] == 3) {
+                tile.style.color = "red";
+            }
+            else if (minefield[tile.id] == 4) {
+                tile.style.color = "purple";
+            }
+            else if (minefield[tile.id] == 5) {
+                tile.style.color = "maroon";
+            }
+            else if (minefield[tile.id] == 6) {
+                tile.style.color = "teal";
+            }
+            else if (minefield[tile.id] == 7) {
+                tile.style.color = "black";
+            }
+            else if (minefield[tile.id] == 8) {
+                tile.style.color = "gray";
+            }
         }
 
         function generate_array(mines_amount, start_index) {
