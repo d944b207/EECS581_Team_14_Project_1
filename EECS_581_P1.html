@@ -57,7 +57,7 @@
     </div>
     <script>
 
-        let NUM_MINES = document.getElementById("mineCount").value; // change this to the result of the input form
+        let NUM_MINES; // change this to the result of the input form
         const minefield = new Array(100); // moving to global scope so other functions can reference this easily
         let mouse_x = 0;
         let mouse_y = 0;
@@ -128,6 +128,7 @@
 
         function apply_settings() {
             //TODO: add extra settings if implemented in future
+            NUM_MINES = document.getElementById("mineCount").value;
 
             //get the settings paragraph
             var start_info = document.getElementById("start_info");
