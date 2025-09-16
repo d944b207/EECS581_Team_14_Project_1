@@ -208,7 +208,9 @@
             tile.disabled = true;
 
             // set the text on the button to the number of adjacent mines here, or if its just a mine
-            tile.innerHTML = minefield[tile.id];
+            if (minefield[tile.id] != 0) {
+                tile.innerHTML = minefield[tile.id]
+            };
             tile.style.color = number_color(minefield[tile.id]);
 
             if (minefield[tile.id] == 0) {
@@ -233,9 +235,11 @@
                             if (nr >= 0 && nr < 10 && nc >= 0 && nc < 10 && !btn.disabled && !btn.is_flagged) {
                                 //update status of button
                                 btn.disabled = true;
-                                btn.innerHTML = minefield[ni];
+                                if (minefield[ni] != 0) {
+                                    btn.innerHTML = minefield[ni];
+                                }
                                 console.log(`revealing ${ni}`);
-                                btn.style.color = "#008CBA";
+                                btn.style.color = number_color(minefield[ni]);
                                 //add current neighbor to the queue to continue to DFS 
                                 //iff said current neighbor is a 0 cell
                                 if (minefield[ni] === 0) queue.push(ni);
@@ -249,7 +253,7 @@
         function generate_array(mines_amount, start_index) {
             // Generates minefield without mine in start_index
             // const minefield = new Array(100); moved to global scope, at least for now
-            minefield.fill("_", 0, 100 - mines_amount);
+            minefield.fill("", 0, 100 - mines_amount);
             minefield.fill("*", 100 - mines_amount, 100);
             console.log("mines: " + minefield);
             shuffle(minefield);
@@ -261,7 +265,6 @@
                     console.log("iteration: " + minefield);
                 }
             }
-            minefield[start_index] = 0;
             console.log("end: " + minefield);
 
             // Generates "mines_nearby" values
