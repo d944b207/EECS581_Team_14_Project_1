@@ -49,6 +49,7 @@
         <option value="20">20</option>
     </select>
     <p id="start_info">This will update to display info about the game settings upon clicking the start game button</p>
+    <p id="flagCounter"></p>
 
     <!--Create the canvas and overlay-->
     <div id="container">
@@ -58,6 +59,7 @@
     <script>
 
         let NUM_MINES; // change this to the result of the input form
+        let flag_count; // equal to number of mines to start
         const minefield = new Array(100); // moving to global scope so other functions can reference this easily
         let mouse_x = 0;
         let mouse_y = 0;
@@ -65,6 +67,9 @@
 
         //get access to the start game button
         var start_game_button = document.getElementById("start_game_button");
+
+        // HTML to track flags for user
+        let flag_counter = document.getElementById("flagCounter");
 
         //when the start button is clicked, chosen settings will be applied
         start_game_button.addEventListener("click", apply_settings);
@@ -105,43 +110,49 @@
                 //append the tempButton to the element that div is "pointing" to
                 div.append(tempButton);
             }
-            // track mouse's coordinates for flagging spaces
-            document.addEventListener("mousemove", function () {
-                mouse_x = event.clientX;
-                mouse_y = event.clientY;
-            });
-            // event listener for f-key/flagging
-            document.addEventListener("keypress", function (event) {
-                let button = document.elementFromPoint(mouse_x, mouse_y);
-                if (button.is_hovering && event.key === "f") {
-                    if (!button.is_flagged && !button.disabled) {
-                        button.innerHTML = "FLAG";
-                        button.style.fontWeight = "bold";
-                        button.style.fontSize = "20px";
-                        button.style.color = "#008CBA";
+        // track mouse's coordinates for flagging spaces
+        document.addEventListener("mousemove", function () {
+            mouse_x = event.clientX;
+            mouse_y = event.clientY;
+        });
+        // event listener for f-key/flagging
+        document.addEventListener("keypress", function (event) {
+            let button = document.elementFromPoint(mouse_x, mouse_y);
+            if (button.is_hovering && event.key === "f") {
+                if (!button.is_flagged && !button.disabled && flag_count > 0) { // flag
+                    flag_count--;
+                    button.innerHTML = "FLAG";
+                    button.style.fontWeight = "bold";
+                    button.style.fontSize = "20px";
+                    button.style.color = "#008CBA";
+                    flag_counter.innerText = `${flag_count} flags left`;
 
-                        button.is_flagged = !button.is_flagged;
-                    } else if (button.is_flagged && !button.disabled) {
-                        button.innerHTML = "";
-                        button.is_flagged = !button.is_flagged;
-                    }
+                    button.is_flagged = !button.is_flagged;
+                } else if (button.is_flagged && !button.disabled) { // unflag
+                    flag_count++;
+                    button.innerHTML = "";
+                    flag_counter.innerText = `${flag_count} flags left`;
+
+                    button.is_flagged = !button.is_flagged;
                 }
-            });
+            }
+        });
         }
         function apply_settings() {
 
             if (game_in_progress == false) {
                 //TODO: add extra settings if implemented in future
                 NUM_MINES = document.getElementById("mineCount").value;
+                flag_count = NUM_MINES;
 
                 //get the settings paragraph
                 var start_info = document.getElementById("start_info");
 
                 //change the text to show settings to validate that they've been applied
                 start_info.innerText = `Game started with ${NUM_MINES} mines`;
-
+                flag_counter.innerText = `${flag_count} flags left`;
+              
                 generate_game_grid();
-
                 game_in_progress = true;
 
             } else {
@@ -340,6 +351,4 @@
 
     </script>
 </body>
-
-
 </html>
