@@ -200,6 +200,9 @@
             game_in_progress = false;
         }
 
+        //helper function for BFS
+        function idx(r, c) { return r * 10 + c; }
+
         function reveal(tile) {
             // TODO:
             // end the game if this is called on a bomb initially, otherwise it is a
@@ -210,6 +213,45 @@
 
             // we don't need to click the button anymore, we can disable it
             tile.disabled = true;
+
+            // set the text on the button to the number of adjacent mines here, or if its just a mine
+            tile.innerHTML = minefield[tile.id];
+
+            if (minefield[tile.id] == 0) {
+                //DFS to reveal all connected 0 cells
+                let queue = [tile.id];
+                while (queue.length) {
+                    //removes last cell from queue 
+                    let curr = queue.pop();
+                    //convert current index for 1d array "minefield" into 
+                    //it's corresponding row and col values
+                    let r = Math.floor(curr / 10), c = curr % 10;
+                    //loop through all possible directions
+                    for (let dr = -1; dr <= 1; dr++) {
+                        for (let dc = -1; dc <= 1; dc++) {
+                            //calculate current "neighbors" row (nr) and column (nc) 
+                            let nr = r + dr, nc = c + dc;
+                            //convert to neighbors index (ni)
+                            let ni = idx(nr, nc);
+                            //get button element
+                            let btn = document.getElementById(ni);
+                            //check that neighbor is within the grid bounds, not already revealed, and not flagged
+                            if (nr >= 0 && nr < 10 && nc >= 0 && nc < 10 && !btn.disabled && !btn.is_flagged) {
+                                //update status of button
+                                btn.disabled = true;
+                                btn.innerHTML = minefield[ni];
+                                console.log(`revealing ${ni}`);
+                                btn.style.fontWeight = "bold";
+                                btn.style.fontSize = "20px";
+                                btn.style.color = "#008CBA"; 
+                                //add current neighbor to the queue to continue to DFS 
+                                //iff said current neighbor is a 0 cell
+                                if (minefield[ni] === 0) queue.push(ni);
+                            }
+                        }
+                    }
+                }
+            }
 
             // set the text on the button to the number of adjacent mines here
             if (minefield[tile.id] == "*") {
