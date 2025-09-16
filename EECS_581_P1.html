@@ -128,29 +128,6 @@
                 }
             });
         }
-        // track mouse's coordinates for flagging spaces
-        document.addEventListener("mousemove", function () {
-            mouse_x = event.clientX;
-            mouse_y = event.clientY;
-        });
-        // event listener for f-key/flagging
-        document.addEventListener("keypress", function (event) {
-            let button = document.elementFromPoint(mouse_x, mouse_y);
-            if (button.is_hovering && event.key === "f") {
-                if (!button.is_flagged && !button.disabled) {
-                    button.innerHTML = "FLAG";
-                    button.style.fontWeight = "bold";
-                    button.style.fontSize = "20px";
-                    button.style.color = "#008CBA";
-
-                    button.is_flagged = !button.is_flagged;
-                } else if (button.is_flagged && !button.disabled) {
-                    button.innerHTML = "";
-                    button.is_flagged = !button.is_flagged;
-                }
-            }
-        });
-
         function apply_settings() {
 
             if (game_in_progress == false) {
@@ -363,5 +340,6 @@
 
     </script>
 </body>
+
 
 </html>
