@@ -209,6 +209,7 @@
 
             // set the text on the button to the number of adjacent mines here, or if its just a mine
             tile.innerHTML = minefield[tile.id];
+            tile.style.color = number_color(minefield[tile.id]);
 
             if (minefield[tile.id] == 0) {
                 //DFS to reveal all connected 0 cells
@@ -242,42 +243,6 @@
                         }
                     }
                 }
-            }
-
-            // set the text on the button to the number of adjacent mines here
-            if (minefield[tile.id] == "*") {
-                tile.innerHTML = "*";
-                tile.style.color = "black";
-            } else {
-                tile.innerHTML = minefield[tile.id]; // TODO reveal # of mines nearby
-            }
-
-            // change the style of the button. Should probably be moved up to css eventually
-
-            // here we can assign a color based on the revealed number by checking minefield[id]. #111 was black
-            if (minefield[tile.id] == 1) {
-                tile.style.color = "blue";
-            }
-            else if (minefield[tile.id] == 2) {
-                tile.style.color = "green";
-            }
-            else if (minefield[tile.id] == 3) {
-                tile.style.color = "red";
-            }
-            else if (minefield[tile.id] == 4) {
-                tile.style.color = "purple";
-            }
-            else if (minefield[tile.id] == 5) {
-                tile.style.color = "maroon";
-            }
-            else if (minefield[tile.id] == 6) {
-                tile.style.color = "teal";
-            }
-            else if (minefield[tile.id] == 7) {
-                tile.style.color = "black";
-            }
-            else if (minefield[tile.id] == 8) {
-                tile.style.color = "gray";
             }
         }
 
@@ -341,12 +306,42 @@
 
         }
 
-
         // https://javascript.info/task/shuffle
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 let j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function number_color(number) {
+            // here we can assign a color based on the revealed number by checking minefield[id]. #111 was black
+            if (number == 1) {
+                return "blue";
+            }
+            else if (number == 2) {
+                return "green";
+            }
+            else if (number == 3) {
+                return "red";
+            }
+            else if (number == 4) {
+                return "purple";
+            }
+            else if (number == 5) {
+                return "maroon";
+            }
+            else if (number == 6) {
+                return "teal";
+            }
+            else if (number == 7) {
+                return "black";
+            }
+            else if (number == 8) {
+                return "gray";
+            }
+            else {
+                return "black";
             }
         }
 
