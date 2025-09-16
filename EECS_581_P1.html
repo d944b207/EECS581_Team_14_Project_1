@@ -26,6 +26,13 @@
             display: grid;
             grid-template-columns: 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
         }
+
+        /*Style of Individual buttons*/
+        .tile-style {
+            height: 50px;
+            font-weight: bold;
+            font-size: 20px;
+        }
     </style>
 </head>
 
@@ -92,7 +99,7 @@
                 tempButton.is_flagged = 0;
 
                 //make the height of the button be 50px (1/10 * height of the canvas)
-                tempButton.style.height = "50px";
+                tempButton.className = "tile-style";
 
                 // add left-click event handler to the button
                 tempButton.addEventListener("click", left_click);
@@ -110,33 +117,31 @@
                 //append the tempButton to the element that div is "pointing" to
                 div.append(tempButton);
             }
-        // track mouse's coordinates for flagging spaces
-        document.addEventListener("mousemove", function () {
-            mouse_x = event.clientX;
-            mouse_y = event.clientY;
-        });
-        // event listener for f-key/flagging
-        document.addEventListener("keypress", function (event) {
-            let button = document.elementFromPoint(mouse_x, mouse_y);
-            if (button.is_hovering && event.key === "f") {
-                if (!button.is_flagged && !button.disabled && flag_count > 0) { // flag
-                    flag_count--;
-                    button.innerHTML = "FLAG";
-                    button.style.fontWeight = "bold";
-                    button.style.fontSize = "20px";
-                    button.style.color = "#008CBA";
-                    flag_counter.innerText = `${flag_count} flags left`;
+            // track mouse's coordinates for flagging spaces
+            document.addEventListener("mousemove", function () {
+                mouse_x = event.clientX;
+                mouse_y = event.clientY;
+            });
+            // event listener for f-key/flagging
+            document.addEventListener("keypress", function (event) {
+                let button = document.elementFromPoint(mouse_x, mouse_y);
+                if (button.is_hovering && event.key === "f") {
+                    if (!button.is_flagged && !button.disabled && flag_count > 0) { // flag
+                        flag_count--;
+                        button.innerHTML = "FLAG";
+                        button.style.color = "#008CBA";
+                        flag_counter.innerText = `${flag_count} flags left`;
 
-                    button.is_flagged = !button.is_flagged;
-                } else if (button.is_flagged && !button.disabled) { // unflag
-                    flag_count++;
-                    button.innerHTML = "";
-                    flag_counter.innerText = `${flag_count} flags left`;
+                        button.is_flagged = !button.is_flagged;
+                    } else if (button.is_flagged && !button.disabled) { // unflag
+                        flag_count++;
+                        button.innerHTML = "";
+                        flag_counter.innerText = `${flag_count} flags left`;
 
-                    button.is_flagged = !button.is_flagged;
+                        button.is_flagged = !button.is_flagged;
+                    }
                 }
-            }
-        });
+            });
         }
         function apply_settings() {
 
@@ -151,7 +156,7 @@
                 //change the text to show settings to validate that they've been applied
                 start_info.innerText = `Game started with ${NUM_MINES} mines`;
                 flag_counter.innerText = `${flag_count} flags left`;
-              
+
                 generate_game_grid();
                 game_in_progress = true;
 
@@ -229,9 +234,7 @@
                                 btn.disabled = true;
                                 btn.innerHTML = minefield[ni];
                                 console.log(`revealing ${ni}`);
-                                btn.style.fontWeight = "bold";
-                                btn.style.fontSize = "20px";
-                                btn.style.color = "#008CBA"; 
+                                btn.style.color = "#008CBA";
                                 //add current neighbor to the queue to continue to DFS 
                                 //iff said current neighbor is a 0 cell
                                 if (minefield[ni] === 0) queue.push(ni);
@@ -250,8 +253,6 @@
             }
 
             // change the style of the button. Should probably be moved up to css eventually
-            tile.style.fontWeight = "bold";
-            tile.style.fontSize = "20px";
 
             // here we can assign a color based on the revealed number by checking minefield[id]. #111 was black
             if (minefield[tile.id] == 1) {
@@ -351,4 +352,5 @@
 
     </script>
 </body>
+
 </html>
