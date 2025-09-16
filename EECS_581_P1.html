@@ -35,19 +35,19 @@
     <button id="start_game_button">Start Game</button>
     <br><br>
     <label for="mineCount">Mines:</label>
-        <select id="mineCount">
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15" selected>15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-        </select>
+    <select id="mineCount">
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+        <option value="15" selected>15</option>
+        <option value="16">16</option>
+        <option value="17">17</option>
+        <option value="18">18</option>
+        <option value="19">19</option>
+        <option value="20">20</option>
+    </select>
     <p id="start_info">This will update to display info about the game settings upon clicking the start game button</p>
 
     <!--Create the canvas and overlay-->
@@ -80,7 +80,6 @@
 
             //give the tempButton an id (will be converted to a string)
             tempButton.id = i;
-            console.log(tempButton.id);
 
             // give the button a flag to tell if it is flagged or not
             tempButton.is_flagged = 0;
@@ -94,37 +93,37 @@
             // f-key event listener needs to know whether or not mouse is hovering over
             // button.
             tempButton.is_hovering = false;
-            tempButton.addEventListener("mouseenter", function() {
-              this.is_hovering = true;
+            tempButton.addEventListener("mouseenter", function () {
+                this.is_hovering = true;
             });
-            tempButton.addEventListener("mouseleave", function() {
-              this.is_hovering = false;
+            tempButton.addEventListener("mouseleave", function () {
+                this.is_hovering = false;
             });
 
             //append the tempButton to the element that div is "pointing" to
             div.append(tempButton);
         }
         // track mouse's coordinates for flagging spaces
-        document.addEventListener("mousemove", function() {
-          mouse_x = event.clientX;
-          mouse_y = event.clientY;
+        document.addEventListener("mousemove", function () {
+            mouse_x = event.clientX;
+            mouse_y = event.clientY;
         });
         // event listener for f-key/flagging
-        document.addEventListener("keypress", function(event) {
-          let button = document.elementFromPoint(mouse_x, mouse_y);
-          if (button.is_hovering && event.key === "f") {
-            if (!button.is_flagged && !button.disabled) {
-              button.innerHTML = "FLAG";
-              button.style.fontWeight = "bold";
-              button.style.fontSize = "20px";
-              button.style.color = "#008CBA";
+        document.addEventListener("keypress", function (event) {
+            let button = document.elementFromPoint(mouse_x, mouse_y);
+            if (button.is_hovering && event.key === "f") {
+                if (!button.is_flagged && !button.disabled) {
+                    button.innerHTML = "FLAG";
+                    button.style.fontWeight = "bold";
+                    button.style.fontSize = "20px";
+                    button.style.color = "#008CBA";
 
-              button.is_flagged = !button.is_flagged;
-            } else if (button.is_flagged && !button.disabled) {
-              button.innerHTML = "";
-              button.is_flagged = !button.is_flagged;
+                    button.is_flagged = !button.is_flagged;
+                } else if (button.is_flagged && !button.disabled) {
+                    button.innerHTML = "";
+                    button.is_flagged = !button.is_flagged;
+                }
             }
-          }
         });
 
         function apply_settings() {
@@ -140,7 +139,7 @@
             start_info.innerText = `Game started with ${NUM_MINES} mines`;
 
         }
-              
+
         function left_click() {
             // "this" refers to the HTML element that called this function
             console.log(this.id);
@@ -179,11 +178,11 @@
 
             // set the text on the button to the number of adjacent mines here
             if (minefield[tile.id] == "*") {
-              tile.innerHTML = "*";
+                tile.innerHTML = "*";
             } else {
-              tile.innerHTML = minefield[tile.id]; // TODO reveal # of mines nearby
+                tile.innerHTML = minefield[tile.id]; // TODO reveal # of mines nearby
             }
-            
+
             // change the style of the button. Should probably be moved up to css eventually
             tile.style.fontWeight = "bold";
             tile.style.fontSize = "20px";
@@ -204,49 +203,49 @@
                     console.log("iteration: " + minefield);
                 }
             }
-            minefield[start_index] = 0; 
+            minefield[start_index] = 0;
             console.log("end: " + minefield);
 
             // Generates "mines_nearby" values
             for (let i = 0; i < 100; i++) {
                 let mines_nearby = 0;
                 if (minefield[i] != "*") {
-                    if(minefield[i-11] == "*" && (i % 10 != 0)) {    // Top Left
+                    if (minefield[i - 11] == "*" && (i % 10 != 0)) {    // Top Left
                         mines_nearby++;
                     }
-                    if(minefield[i-10] == "*") {    // Top
+                    if (minefield[i - 10] == "*") {    // Top
                         mines_nearby++;
                     }
-                    if(minefield[i-9] == "*" && ((i + 1) % 10 != 0)) {     // Top Right
+                    if (minefield[i - 9] == "*" && ((i + 1) % 10 != 0)) {     // Top Right
                         mines_nearby++;
                     }
-                    if(minefield[i-1] == "*"  && (i % 10 != 0)) {     // Left
+                    if (minefield[i - 1] == "*" && (i % 10 != 0)) {     // Left
                         mines_nearby++;
                     }
-                    if(minefield[i+1] == "*" && ((i + 1) % 10 != 0)) {     // Right
+                    if (minefield[i + 1] == "*" && ((i + 1) % 10 != 0)) {     // Right
                         mines_nearby++;
                     }
-                    if(minefield[i+9] == "*"  && (i % 10 != 0)) {     // Bottom Left
+                    if (minefield[i + 9] == "*" && (i % 10 != 0)) {     // Bottom Left
                         mines_nearby++;
                     }
-                    if(minefield[i+10] == "*") {    // Bottom
+                    if (minefield[i + 10] == "*") {    // Bottom
                         mines_nearby++;
                     }
-                    if(minefield[i+11] == "*") {    // Bottom Left
+                    if (minefield[i + 11] == "*" && ((i + 1) % 10 != 0)) {    // Bottom Right
                         mines_nearby++;
                     }
                     minefield[i] = mines_nearby;
                 }
             }
             console.log("Minefield:")
-            for (let i = 0; i < 100; i+=10) {
+            for (let i = 0; i < 100; i += 10) {
                 line = ""
                 for (let j = 0; j < 10; j++) {
-                    line += minefield[i+j] + " "
+                    line += minefield[i + j] + " "
                 }
                 console.log(line)
             }
-            
+
         }
 
 
