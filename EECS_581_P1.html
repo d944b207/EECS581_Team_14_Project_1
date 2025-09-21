@@ -113,8 +113,8 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
         //create the row and column labels
         let x_col = 30;
         let y_row = 30;
-        let rows = ['0', '1', '2', '3', '4', '5', '6','7', '8', '9'];
-        let cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+        let cols = ['0', '1', '2', '3', '4', '5', '6','7', '8', '9'];
+        let rows = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
         for (let canvas_index = 0; canvas_index < 10; canvas_index++) {
             //write the current column index in position
             context.strokeText(rows[canvas_index], x_col + (70 * canvas_index), 520);
@@ -431,5 +431,6 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
 
     </script>
 </body>
+
 
 </html>
