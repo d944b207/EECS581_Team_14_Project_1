@@ -1,4 +1,15 @@
 <!doctype html>
+
+<!--
+NAME: EECS_581_P1.html
+Description: HTML file with JavaScript that plays Minesweeper
+Authors: Daniel Butler, Charley Findling, Skylar Franz, Jack Gerety, Beckett Malinowski
+External Source: https://javascript.info/task/shuffle - for Array Shuffle function
+Creation Date: 09/02/2025
+Inputs: User clicks: Number of mines selection, Game Start button, Canvas tile elements (minefield), F KEY: Flag mines
+Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
+-->
+
 <html>
 
 <head>
@@ -122,65 +133,64 @@
                 div.append(tempButton);
             }
         }
-            // track mouse's coordinates for flagging spaces
-            document.addEventListener("mousemove", function () {
-                mouse_x = event.clientX;
-                mouse_y = event.clientY;
-            });
-            // event listener for f-key/flagging
-            document.addEventListener("keydown", function (event) {
-                console.log('f clicked.', game_in_progress );
-                
-                if (!game_in_progress) {
-                    return; // do nothing if game is not active
-                }
-                let button = document.elementFromPoint(mouse_x, mouse_y);
-                if (button.is_hovering && event.key === "f") {
-                    console.log('flag key:', !button.is_flagged, !button.disabled, flag_count > 0);
-                    if (!button.is_flagged && !button.disabled && flag_count > 0) { // flag
-                        console.log('flagging now');
-                        flag_count--;
-                        button.innerHTML = "FLAG";
-                        button.style.color = "#008CBA";
-                        flag_counter.innerText = `${flag_count} flags left`;
 
-                        button.is_flagged = !button.is_flagged;
-                    } else if (button.is_flagged && !button.disabled) { // unflag
-                        flag_count++;
-                        button.innerHTML = "";
-                        flag_counter.innerText = `${flag_count} flags left`;
+        // track mouse's coordinates for flagging spaces
+        document.addEventListener("mousemove", function () {
+            mouse_x = event.clientX;
+            mouse_y = event.clientY;
+        });
 
-                        button.is_flagged = !button.is_flagged;
-                    }
+        // event listener for f-key/flagging
+        document.addEventListener("keydown", function (event) {
+            console.log('f clicked.', game_in_progress);
+
+            if (!game_in_progress) {
+                return; // do nothing if game is not active
+            }
+            let button = document.elementFromPoint(mouse_x, mouse_y);
+            if (button.is_hovering && event.key === "f") {
+                console.log('flag key:', !button.is_flagged, !button.disabled, flag_count > 0);
+                if (!button.is_flagged && !button.disabled && flag_count > 0) { // flag
+                    console.log('flagging now');
+                    flag_count--;
+                    button.innerHTML = "FLAG";
+                    button.style.color = "#008CBA";
+                    flag_counter.innerText = `${flag_count} flags left`;
+
+                    button.is_flagged = !button.is_flagged;
+                } else if (button.is_flagged && !button.disabled) { // unflag
+                    flag_count++;
+                    button.innerHTML = "";
+                    flag_counter.innerText = `${flag_count} flags left`;
+
+                    button.is_flagged = !button.is_flagged;
                 }
-            });
-        
-        
+            }
+        });
+
+        // Apply mine count settings when start button is clicked, and other status indicators
         function apply_settings() {
-
             if (game_in_progress == false) {
-                //TODO: add extra settings if implemented in future
+
+                // Gets number of mines from html mineCount selection
                 NUM_MINES = document.getElementById("mineCount").value;
                 flag_count = NUM_MINES;
                 revealed_count = 0;
 
                 //get the settings paragraph
                 var start_info = document.getElementById("start_info");
-                
+
                 //change the text to show settings to validate that they've been applied
                 console.log(`Game started with ${NUM_MINES} mines`);
                 start_info.innerText = "Status: Playing";
                 flag_counter.innerText = `${flag_count} flags left`;
                 document.getElementById("start_game_button").innerText = "Game Started!";
 
-
                 generate_game_grid();
                 game_in_progress = true;
 
             } else {
-
                 alert("Game Is In Progress!")
-
             }
 
         }
@@ -217,7 +227,7 @@
                 document.getElementById("start_game_button").innerText = "New Game?";
                 document.getElementById("start_info").innerText = "Game Over: Victory!";
             }
-            
+
         }
 
         function gameOver() {
@@ -237,12 +247,8 @@
         //helper function for BFS
         function idx(r, c) { return r * 10 + c; }
 
+        // Reveal tile value when clicked
         function reveal(tile) {
-            // TODO:
-            // end the game if this is called on a bomb initially, otherwise it is a
-            // recursive or BFS (ideally) reveal function that reveals all numbers adjacent (including diagonally)
-            // to the revealed tile if it is empty (no adjacent bombs).
-            // Then, reveal all other empty adjacent tiles with BFS.
             console.log(`revealing ${tile.id}`);
 
             // we don't need to click the button anymore, we can disable it
@@ -255,6 +261,7 @@
             };
             tile.style.color = number_color(minefield[tile.id]);
 
+            // Cascading mine reveal (BFS)
             if (minefield[tile.id] == 0) {
                 //DFS to reveal all connected 0 cells
                 let queue = [tile.id];
@@ -278,8 +285,8 @@
                                 //update status of button
                                 btn.disabled = true;
                                 revealed_count++;
-                                if (minefield[ni] != 0) {
-                                    btn.innerHTML = minefield[ni];
+                                if (minefield[ni] != 0) {   // If mines_nearby is 0, leave the tile blank
+                                    btn.innerHTML = minefield[ni];  // Otherwise, show mines_nearby/mine
                                 }
                                 console.log(`revealing ${ni}`);
                                 btn.style.color = number_color(minefield[ni]);
@@ -293,19 +300,20 @@
             }
         }
 
+        // Generates minefield with no mine where the user clicked (start_index)
         function generate_array(mines_amount, start_index) {
-            // Generates minefield without mine in start_index
-            // const minefield = new Array(100); moved to global scope, at least for now
-            minefield.fill("", 0, 100 - mines_amount);
-            minefield.fill("*", 100 - mines_amount, 100);
+            minefield.fill("", 0, 100 - mines_amount);      // Fills blank spaces
+            minefield.fill("*", 100 - mines_amount, 100);   // Fills with mines (*)
+
             console.log("mines: " + minefield);
-            shuffle(minefield);
+            shuffle(minefield); // Randomizes minefield
             console.log("start: " + minefield);
-            shuffle(minefield);
+
+            // If after shuffling there's a mine in the starting position, shuffle until it isn't
             if (minefield[start_index] == "*") {
                 while (minefield[start_index] == "*") {
                     shuffle(minefield);
-                    console.log("iteration: " + minefield);
+                    console.log("iteration: " + minefield); // Prints iterations
                 }
             }
             console.log("end: " + minefield);
@@ -314,7 +322,7 @@
             for (let i = 0; i < 100; i++) {
                 let mines_nearby = 0;
                 if (minefield[i] != "*") {
-                    if (minefield[i - 11] == "*" && (i % 10 != 0)) {    // Top Left
+                    if (minefield[i - 11] == "*" && (i % 10 != 0)) {    // Top Left (i % 10 != 0 is for borders)
                         mines_nearby++;
                     }
                     if (minefield[i - 10] == "*") {    // Top
@@ -338,21 +346,23 @@
                     if (minefield[i + 11] == "*" && ((i + 1) % 10 != 0)) {    // Bottom Right
                         mines_nearby++;
                     }
-                    minefield[i] = mines_nearby;
+                    minefield[i] = mines_nearby;    // Assigns mine number to field
                 }
             }
+
+            // Prints minefield in console for testing
             console.log("Minefield:")
             for (let i = 0; i < 100; i += 10) {
-                line = ""
+                line = "";
                 for (let j = 0; j < 10; j++) {
-                    line += minefield[i + j] + " "
+                    line += minefield[i + j] + " ";
                 }
-                console.log(line)
+                console.log(line);
             }
 
         }
 
-        // https://javascript.info/task/shuffle
+        // SOURCE: https://javascript.info/task/shuffle
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 let j = Math.floor(Math.random() * (i + 1));
@@ -360,8 +370,8 @@
             }
         }
 
+        // Returns a color based on what the tile revealed was
         function number_color(number) {
-            // here we can assign a color based on the revealed number by checking minefield[id]. #111 was black
             if (number == 1) {
                 return "blue";
             }
@@ -387,7 +397,7 @@
                 return "gray";
             }
             else {
-                return "black";
+                return "black"; // Mine was revealed
             }
         }
 
