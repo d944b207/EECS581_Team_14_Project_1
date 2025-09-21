@@ -14,6 +14,7 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
 
 <head>
     <style>
+        /*CSS STYLING CODE FOR OVERLAY POSITIONING AND CREATING GRID SHAPE COMES FROM STACK OVERFLOW AND IS ALTERED TO FIT THIS PROGRAM*/
         /*Element with id="container" will follow the regular positioning flow of the html document*/
         #container {
             position: relative;
@@ -28,11 +29,12 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
             position: absolute;
         }
 
+        /*when a canvas is created, it creates a free rectangle with the border without needing to draw it using javascript*/
         canvas {
             border: 1px solid black;
         }
 
-        .categories-buttons {
+        .grid {
             /*grid of 10 columns, each being 70 pixels wide*/
             display: grid;
             grid-template-columns: 70px 70px 70px 70px 70px 70px 70px 70px 70px 70px;
@@ -67,17 +69,17 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
         <option value="20">20</option>
     </select>
 
+    <p>Controls: left click tile to reveal, press f while hovering over tile to flag it</p>
     <div style="display:flex; align-items:center; gap:60px;">
-        <p id="game_status" style="color:blue;">Select number of mines and click Start Game to begin! Press F to
-            flag tiles!</p> <!--Displays game status: Playing, Victory, Defeat -->
+        <p id="game_status" style="color:blue;"></p> <!--Displays game status: Playing, Victory, Defeat -->
         <p id="flagsPlacedCounter" style="color:teal;"></p> <!--Displays count for placed flags-->
         <p id="flagCounter" style="color:red;"></p> <!--Displays count for flags remaining/mines left-->
     </div>
 
     <!--Create the canvas and overlay-->
     <div id="container">
-        <canvas id="canvas" width="700" height="500"></canvas>
-        <div id="overlay" class="categories-buttons"></div>
+        <canvas id="canvas" width="725" height="525"></canvas>
+        <div id="overlay" class="grid"></div>
     </div>
     <script>
 
@@ -101,8 +103,25 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
         start_game_button.addEventListener("click", apply_settings);
 
         //get access to the divider and the canvas elements
-        var div = document.getElementsByClassName("categories-buttons")[0];
+        var div = document.getElementsByClassName("grid")[0];
         const context = document.getElementById("canvas").getContext("2d");
+
+        //specify text font and color in the canvas
+        context.font = "18px Arial";
+        context.strokeStyle = "black";
+
+        //create the row and column labels
+        let x_col = 30;
+        let y_row = 30;
+        let rows = ['0', '1', '2', '3', '4', '5', '6','7', '8', '9'];
+        let cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+        for (let canvas_index = 0; canvas_index < 10; canvas_index++) {
+            //write the current column index in position
+            context.strokeText(rows[canvas_index], x_col + (70 * canvas_index), 520);
+            //write the current row index in position
+            context.strokeText(cols[canvas_index], 708, y_row + (50 * canvas_index));
+
+        }
 
         function generate_game_grid() {
             div.innerHTML = ""; // clear the div. Be careful about this when adding the labels!!
