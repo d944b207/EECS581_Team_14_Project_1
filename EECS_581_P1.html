@@ -66,8 +66,13 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
         <option value="19">19</option>
         <option value="20">20</option>
     </select>
-    <p id="start_info">Select number of mines and click Start Game to begin!</p>
-    <p id="flagCounter"></p>
+
+    <div style="display:flex; align-items:center; gap:60px;">
+        <p id="game_status" style="color:blue;">Select number of mines and click Start Game to begin! Press F to
+            flag tiles!</p> <!--Displays game status: Playing, Victory, Defeat -->
+        <p id="flagsPlacedCounter" style="color:teal;"></p> <!--Displays count for placed flags-->
+        <p id="flagCounter" style="color:red;"></p> <!--Displays count for flags remaining/mines left-->
+    </div>
 
     <!--Create the canvas and overlay-->
     <div id="container">
@@ -88,8 +93,9 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
         //get access to the start game button
         var start_game_button = document.getElementById("start_game_button");
 
-        // HTML to track flags for user
+        // HTML to track flags for user (and therefore remaining mine count)
         let flag_counter = document.getElementById("flagCounter");
+        let flags_placed = document.getElementById("flagsPlacedCounter");
 
         //when the start button is clicked, chosen settings will be applied
         start_game_button.addEventListener("click", apply_settings);
@@ -155,13 +161,15 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
                     flag_count--;
                     button.innerHTML = "FLAG";
                     button.style.color = "#008CBA";
-                    flag_counter.innerText = `${flag_count} flags left`;
+                    flag_counter.innerText = `${flag_count} flags/mines left`;
+                    flags_placed.innerText = `${NUM_MINES - flag_count} flags placed`;
 
                     button.is_flagged = !button.is_flagged;
                 } else if (button.is_flagged && !button.disabled) { // unflag
                     flag_count++;
                     button.innerHTML = "";
-                    flag_counter.innerText = `${flag_count} flags left`;
+                    flag_counter.innerText = `${flag_count} flags/mines left`;
+                    flags_placed.innerText = `${NUM_MINES - flag_count} flags placed`;
 
                     button.is_flagged = !button.is_flagged;
                 }
@@ -178,12 +186,13 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
                 revealed_count = 0;
 
                 //get the settings paragraph
-                var start_info = document.getElementById("start_info");
+                var game_status = document.getElementById("game_status");
 
                 //change the text to show settings to validate that they've been applied
                 console.log(`Game started with ${NUM_MINES} mines`);
-                start_info.innerText = "Status: Playing";
-                flag_counter.innerText = `${flag_count} flags left`;
+                game_status.innerText = "Status: Playing";
+                flag_counter.innerText = `${flag_count} flags/mines left`;
+                flags_placed.innerText = `${NUM_MINES - flag_count} flags placed`;
                 document.getElementById("start_game_button").innerText = "Game Started!";
 
                 generate_game_grid();
@@ -225,7 +234,7 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
                 game_in_progress = false;
                 board_initialized = false;
                 document.getElementById("start_game_button").innerText = "New Game?";
-                document.getElementById("start_info").innerText = "Game Over: Victory!";
+                document.getElementById("game_status").innerText = "Game Over: Victory!";
             }
 
         }
@@ -235,7 +244,7 @@ Outputs: Minefield tile reveal: Number of mines/mine, Add FLAG to tile
             game_in_progress = false;
             board_initialized = false;
             document.getElementById("start_game_button").innerText = "New Game?";
-            document.getElementById("start_info").innerText = "Game Over: Defeat";
+            document.getElementById("game_status").innerText = "Game Over: Defeat";
             // reveal all bombs
             for (let i = 0; i < 100; i++) {
                 if (minefield[i] == '*') {
